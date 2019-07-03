@@ -8,10 +8,10 @@ const dotenv = require('dotenv')
 //   res.sendFile(path.join(__dirname, 'index.html'))
 // })
 
-app.listen(4000, (err) => {
+app.listen(process.env.PORT, (err) => {
   if (err) {
     console.log('err', err)
   } else {
-    console.log('Server is listening on port 4000')
+    console.log(`Server is listening on port ${process.env.PORT}`)
   }
 })
