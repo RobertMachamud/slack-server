@@ -3,7 +3,8 @@ const path = require('path')
 const app = express()
 require('dotenv').config()
 
-require('./db')
+// test connection to mongodb
+// require('./db')
 
 app.post('/api/messages', require('./controllers/post_message'))
 app.get('/api/messages', require('./controllers/get_messages'))
