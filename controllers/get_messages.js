@@ -1,17 +1,19 @@
 const db_message = require('../models/message')
 
 module.exports = (req, res) => {
-//   db_message.find({
-//     author: 'Robert'
-//   })
-// }.then( (data) => {
-//   res.send(data)
-// }).catch( (err) => {
-//   res.send(err)
-// })
-  db_message.find({}).then( (data) => {
-    res.send(data)
-  }).catch( (err) => {
-    res.send(err)
-  })
+	let q = {}
+	if (req.query && req.query.channel) {
+		q.channel = req.query.channel
+	}
+	db_message.find(q).populate({
+		path: 'channel',
+		select: 'name'
+	}).populate({
+		path: 'author',
+		select: 'name email'
+	}).sort('-date').then((data) => {
+		res.send(data)
+	}).catch((err) => {
+		res.send(err)
+	})
 }

@@ -1,14 +1,25 @@
 const db = require('../db')
+const mongoose = require('mongoose')
 
-// model has 2 args - 1. Connection (); 2. Schema (besstimmt das Schema - author soll ein String sein usw.)
-// security - we ...
 const db_message = db.model('message', {
-  // takes the type
-  author: String,
-  // Date is a type
-  // date: Date,
-  date: String,
-  body: String
+	author: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'user',
+		required: [true, 'Message Author is required']
+	},
+	date: {
+		type: Date,
+		default: Date.now()
+	},
+	body: {
+		type: String,
+		required: [true, 'Message Body is required']
+	},
+	channel: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'channel',
+		required: [true, 'Message Channel is required']
+	}
 })
 
 module.exports = db_message

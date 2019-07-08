@@ -1,17 +1,25 @@
 const db_message = require('../models/message')
+const jwt = require('jsonwebtoken')
+
 
 module.exports = (req, res) => {
-  // res.send('Message Created') // Testing
-
-  // db_message is collection in database
-  // SQL insert etc
-  db_message.create({
-    autor: 'Robert',
-    body: 'Hello Ladys and Ladyboys!',
-    date: '3 Jul 2019'
-  }).then( (data) => {
-    res.send(data)
-  }).catch( (err) => {
-    res.send(err)
-  })
+	let token = req.headers.authorization.split(' ')[1]
+	jwt.verify(req.body.token, process.env.SECRET, (err, decoded) => {
+		if (decoded) {
+			console.log('decoded', decoded)
+			req.body.author = decoded._id
+			db_message.create(req.body).then( (data) => {
+				db_message.findById(data._id).populate({
+					path: 'author',
+					select: 'email'
+				}).then((message) => {
+					res.send(message)
+				}).catch((err) => {
+					res.send(err)
+				})
+			}).catch((err) => {
+				res.send(err)
+			})
+		}
+	})
 }

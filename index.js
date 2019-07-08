@@ -1,24 +1,31 @@
 const express = require('express')
-const path = require('path')
-const app = express()
+const bodyParser = require('body-parser')
+const cors = require('cors')
 require('dotenv').config()
 
-// test connection to mongodb
-// require('./db')
+const app = express()
 
-// route for messages
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use(cors())
+
+require('./db')
+
 app.post('/api/messages', require('./controllers/post_message'))
 app.get('/api/messages', require('./controllers/get_messages'))
-// this one is the route for channels
+
 app.post('/api/channels', require('./controllers/post_channel'))
-app.get('/api/channels', require('./controllers/post_channel'))
+app.get('/api/channels', require('./controllers/get_channels'))
 
+app.get('/api/users', require('./controllers/get_users'))
 
+app.post('/api/signup', require('./controllers/signup'))
+app.post('/api/login', require('./controllers/login'))
 
 app.listen(process.env.PORT, (err) => {
-  if (err) {
-    console.log('err', err)
-  } else {
-    console.log(`Server is listening on port ${process.env.PORT}`)
-  }
+	if (err) {
+		console.log('ERROR:', err)
+	} else {
+		console.log(`Ready on port ${process.env.PORT}`)
+	}
 })
